@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Game Arcade</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .game-menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .game-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .game-card p {
+            opacity: 0.8;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .play-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .game-screen {
+            display: none;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 15px;
+            color: white;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Simon Game Styles */
+        .simon-container {
+            text-align: center;
+        }
+
+        .simon-board {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            max-width: 300px;
+            margin: 20px auto;
+        }
+
+        .simon-button {
+            width: 120px;
+            height: 120px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .simon-button.red { background: #ff4757; }
+        .simon-button.blue { background: #3742fa; }
+        .simon-button.green { background: #2ed573; }
+        .simon-button.yellow { background: #ffa502; }
+
+        .simon-button.active {
+            transform: scale(0.95);
+            filter: brightness(1.5);
+        }
+
+        .simon-info {
+            margin: 20px 0;
+        }
+
+        .simon-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .game-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .game-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .game-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Dice Game Styles */
+        .dice-container {
+            text-align: center;
+        }
+
+        .players {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 30px 0;
+        }
+
+        .player {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+        }
+
+        .player h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .dice {
+            width: 80px;
+            height: 80px;
+            background: white;
+            color: #333;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 20px auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .dice.rolling {
+            animation: roll 0.5s ease-in-out;
+        }
+
+        .winner {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4) !important;
+            color: white !important;
+        }
+
+        /* Typing Test Styles */
+        .typing-container {
+            text-align: center;
+        }
+
+        .typing-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .stat h4 {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+
+        .stat .value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .text-display {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            text-align: left;
+        }
+
+        .text-display .correct {
+            background: rgba(46, 213, 115, 0.3);
+            color: #2ed573;
+        }
+
+        .text-display .incorrect {
+            background: rgba(255, 71, 87, 0.3);
+            color: #ff4757;
+        }
+
+        .text-display .current {
+            background: rgba(255, 255, 255, 0.3);
+            animation: blink 1s infinite;
+        }
+
+        .typing-input {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.9);
+            margin-top: 20px;
+        }
+
+        .typing-input:focus {
+            outline: none;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes roll {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(180deg) scale(1.1); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2.5rem; }
+            .game-menu { grid-template-columns: 1fr; }
+            .simon-button { width: 100px; height: 100px; }
+            .players { grid-template-columns: 1fr; gap: 20px; }
+            .typing-stats { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 Mini Game Arcade</h1>
+            <p>Challenge yourself with these fun mini-games!</p>
+        </div>
+
+        <div id="main-menu" class="game-menu">
+            <div class="game-card" onclick="showGame('simon')">
+                <h3>🔴 Simon Game</h3>
+                <p>Test your memory with this classic color sequence game. Watch the pattern and repeat it back!</p>
+                <button class="play-btn">Play Now</button>
+            </div>
+
+            <div class="game-card" onclick="showGame('dice')">
+                <h3>🎲 Dice Game</h3>
+                <p>Roll the dice and see who gets the highest number. Simple luck-based multiplayer fun!</p>
+                <button class="play-btn">Play Now</button>
+            </div>
+
+            <div class="game-card" onclick="showGame('typing')">
+                <h3>⌨️ Typing Speed Test</h3>
+                <p>Test your typing speed and accuracy. See how many words per minute you can type!</p>
+                <button class="play-btn">Play Now</button>
+            </div>
+        </div>
+
+        <!-- Simon Game -->
+        <div id="simon-game" class="game-screen">
+            <button class="back-btn" onclick="showMenu()">← Back to Menu</button>
+            <div class="simon-container">
+                <h2>Simon Game</h2>
+                <div class="simon-info">
+                    <h3>Level: <span id="simon-level">1</span></h3>
+                    <p id="simon-status">Click Start to begin!</p>
+                </div>
+                <div class="simon-board">
+                    <button class="simon-button red" data-color="red"></button>
+                    <button class="simon-button blue" data-color="blue"></button>
+                    <button class="simon-button green" data-color="green"></button>
+                    <button class="simon-button yellow" data-color="yellow"></button>
+                </div>
+                <button id="simon-start" class="game-btn">Start Game</button>
+                <button id="simon-reset" class="game-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Dice Game -->
+        <div id="dice-game" class="game-screen">
+            <button class="back-btn" onclick="showMenu()">← Back to Menu</button>
+            <div class="dice-container">
+                <h2>Dice Game</h2>
+                <div class="players">
+                    <div class="player">
+                        <h3>Player 1</h3>
+                        <div id="dice1" class="dice">?</div>
+                        <p id="score1">Score: 0</p>
+                    </div>
+                    <div class="player">
+                        <h3>Player 2</h3>
+                        <div id="dice2" class="dice">?</div>
+                        <p id="score2">Score: 0</p>
+                    </div>
+                </div>
+                <button id="roll-dice" class="game-btn">Roll Dice</button>
+                <button id="reset-dice" class="game-btn">Reset Game</button>
+                <p id="dice-result" style="font-size: 1.5rem; margin-top: 20px;"></p>
+            </div>
+        </div>
+
+        <!-- Typing Test -->
+        <div id="typing-game" class="game-screen">
+            <button class="back-btn" onclick="showMenu()">← Back to Menu</button>
+            <div class="typing-container">
+                <h2>Typing Speed Test</h2>
+                <div class="typing-stats">
+                    <div class="stat">
+                        <h4>WPM</h4>
+                        <div class="value" id="wpm">0</div>
+                    </div>
+                    <div class="stat">
+                        <h4>Accuracy</h4>
+                        <div class="value" id="accuracy">100%</div>
+                    </div>
+                    <div class="stat">
+                        <h4>Time</h4>
+                        <div class="value" id="time">60s</div>
+                    </div>
+                    <div class="stat">
+                        <h4>Characters</h4>
+                        <div class="value" id="characters">0</div>
+                    </div>
+                </div>
+                <div id="text-display" class="text-display"></div>
+                <input type="text" id="typing-input" class="typing-input" placeholder="Click Start and begin typing here..." disabled>
+                <div style="margin-top: 20px;">
+                    <button id="start-typing" class="game-btn">Start Test</button>
+                    <button id="reset-typing" class="game-btn">Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game State Management
+        let currentGame = null;
+        
+        function showMenu() {
+            document.getElementById('main-menu').style.display = 'grid';
+            document.querySelectorAll('.game-screen').forEach(screen => {
+                screen.style.display = 'none';
+            });
+            currentGame = null;
+        }
+        
+        function showGame(gameType) {
+            document.getElementById('main-menu').style.display = 'none';
+            document.querySelectorAll('.game-screen').forEach(screen => {
+                screen.style.display = 'none';
+            });
+            document.getElementById(gameType + '-game').style.display = 'block';
+            currentGame = gameType;
+            
+            // Initialize game
+            if (gameType === 'simon') initSimon();
+            if (gameType === 'dice') initDice();
+            if (gameType === 'typing') initTyping();
+        }
+
+        // Simon Game Logic
+        let simonGame = {
+            sequence: [],
+            playerSequence: [],
+            level: 1,
+            isPlaying: false,
+            isShowingSequence: false
+        };
+
+        function initSimon() {
+            simonGame = {
+                sequence: [],
+                playerSequence: [],
+                level: 1,
+                isPlaying: false,
+                isShowingSequence: false
+            };
+            updateSimonDisplay();
+            
+            document.getElementById('simon-start').onclick = startSimon;
+            document.getElementById('simon-reset').onclick = resetSimon;
+            
+            document.querySelectorAll('.simon-button').forEach(button => {
+                button.onclick = () => handleSimonInput(button.dataset.color);
+            });
+        }
+
+        function startSimon() {
+            simonGame.isPlaying = true;
+            simonGame.sequence = [];
+            simonGame.level = 1;
+            document.getElementById('simon-start').disabled = true;
+            nextSimonRound();
+        }
+
+        function nextSimonRound() {
+            simonGame.playerSequence = [];
+            const colors = ['red', 'blue', 'green', 'yellow'];
+            simonGame.sequence.push(colors[Math.floor(Math.random() * 4)]);
+            updateSimonDisplay();
+            showSimonSequence();
+        }
+
+        function showSimonSequence() {
+            simonGame.isShowingSequence = true;
+            document.getElementById('simon-status').textContent = 'Watch the sequence...';
+            
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i < simonGame.sequence.length) {
+                    activateSimonButton(simonGame.sequence[i]);
+                    i++;
+                } else {
+                    clearInterval(interval);
+                    simonGame.isShowingSequence = false;
+                    document.getElementById('simon-status').textContent = 'Your turn! Click the sequence.';
+                }
+            }, 800);
+        }
+
+        function activateSimonButton(color) {
+            const button = document.querySelector(`[data-color="${color}"]`);
+            button.classList.add('active');
+            setTimeout(() => button.classList.remove('active'), 400);
+        }
+
+        function handleSimonInput(color) {
+            if (!simonGame.isPlaying || simonGame.isShowingSequence) return;
+            
+            simonGame.playerSequence.push(color);
+            activateSimonButton(color);
+            
+            const currentIndex = simonGame.playerSequence.length - 1;
+            
+            if (simonGame.playerSequence[currentIndex] !== simonGame.sequence[currentIndex]) {
+                // Wrong input
+                document.getElementById('simon-status').textContent = 'Wrong! Game Over. Click Start to try again.';
+                simonGame.isPlaying = false;
+                document.getElementById('simon-start').disabled = false;
+                return;
+            }
+            
+            if (simonGame.playerSequence.length === simonGame.sequence.length) {
+                // Completed this level
+                simonGame.level++;
+                setTimeout(() => {
+                    if (simonGame.level <= 20) {
+                        nextSimonRound();
+                    } else {
+                        document.getElementById('simon-status').textContent = 'Congratulations! You won!';
+                        simonGame.isPlaying = false;
+                        document.getElementById('simon-start').disabled = false;
+                    }
+                }, 1000);
+            }
+        }
+
+        function resetSimon() {
+            simonGame.isPlaying = false;
+            simonGame.sequence = [];
+            simonGame.playerSequence = [];
+            simonGame.level = 1;
+            simonGame.isShowingSequence = false;
+            document.getElementById('simon-start').disabled = false;
+            updateSimonDisplay();
+        }
+
+        function updateSimonDisplay() {
+            document.getElementById('simon-level').textContent = simonGame.level;
+            if (!simonGame.isPlaying) {
+                document.getElementById('simon-status').textContent = 'Click Start to begin!';
+            }
+        }
+
+        // Dice Game Logic
+        let diceGame = {
+            player1Score: 0,
+            player2Score: 0,
+            isRolling: false
+        };
+
+        function initDice() {
+            diceGame = { player1Score: 0, player2Score: 0, isRolling: false };
+            updateDiceDisplay();
+            
+            document.getElementById('roll-dice').onclick = rollDice;
+            document.getElementById('reset-dice').onclick = resetDice;
+        }
+
+        function rollDice() {
+            if (diceGame.isRolling) return;
+            
+            diceGame.isRolling = true;
+            document.getElementById('roll-dice').disabled = true;
+            document.getElementById('dice-result').textContent = '';
+            
+            const dice1 = document.getElementById('dice1');
+            const dice2 = document.getElementById('dice2');
+            
+            dice1.classList.add('rolling');
+            dice2.classList.add('rolling');
+            dice1.classList.remove('winner');
+            dice2.classList.remove('winner');
+            
+            // Animate rolling
+            let rollCount = 0;
+            const rollInterval = setInterval(() => {
+                dice1.textContent = Math.floor(Math.random() * 6) + 1;
+                dice2.textContent = Math.floor(Math.random() * 6) + 1;
+                rollCount++;
+                
+                if (rollCount >= 10) {
+                    clearInterval(rollInterval);
+                    finalizeDiceRoll();
+                }
+            }, 100);
+        }
+
+        function finalizeDiceRoll() {
+            const dice1 = document.getElementById('dice1');
+            const dice2 = document.getElementById('dice2');
+            
+            const roll1 = Math.floor(Math.random() * 6) + 1;
+            const roll2 = Math.floor(Math.random() * 6) + 1;
+            
+            dice1.textContent = roll1;
+            dice2.textContent = roll2;
+            
+            dice1.classList.remove('rolling');
+            dice2.classList.remove('rolling');
+            
+            let result = '';
+            if (roll1 > roll2) {
+                diceGame.player1Score++;
+                dice1.classList.add('winner');
+                result = 'Player 1 Wins This Round!';
+            } else if (roll2 > roll1) {
+                diceGame.player2Score++;
+                dice2.classList.add('winner');
+                result = 'Player 2 Wins This Round!';
+            } else {
+                result = "It's a Tie!";
+            }
+            
+            document.getElementById('dice-result').textContent = result;
+            updateDiceDisplay();
+            
+            diceGame.isRolling = false;
+            document.getElementById('roll-dice').disabled = false;
+        }
+
+        function resetDice() {
+            diceGame = { player1Score: 0, player2Score: 0, isRolling: false };
+            document.getElementById('dice1').textContent = '?';
+            document.getElementById('dice2').textContent = '?';
+            document.getElementById('dice1').classList.remove('winner');
+            document.getElementById('dice2').classList.remove('winner');
+            document.getElementById('dice-result').textContent = '';
+            document.getElementById('roll-dice').disabled = false;
+            updateDiceDisplay();
+        }
+
+        function updateDiceDisplay() {
+            document.getElementById('score1').textContent = `Score: ${diceGame.player1Score}`;
+            document.getElementById('score2').textContent = `Score: ${diceGame.player2Score}`;
+        }
+
+        // Typing Test Logic
+        let typingTest = {
+            text: "The quick brown fox jumps over the lazy dog. This pangram contains every letter of the alphabet at least once. Typing tests are great for improving your keyboard skills and measuring your words per minute. Practice makes perfect, so keep typing to increase your speed and accuracy. Remember to use proper finger placement and maintain good posture while typing.",
+            currentIndex: 0,
+            startTime: null,
+            timeLimit: 60,
+            timeLeft: 60,
+            timer: null,
+            correctChars: 0,
+            totalChars: 0,
+            isActive: false,
+            errors: 0
+        };
+
+        function initTyping() {
+            resetTypingTest();
+            
+            document.getElementById('start-typing').onclick = startTypingTest;
+            document.getElementById('reset-typing').onclick = resetTypingTest;
+            document.getElementById('typing-input').oninput = handleTypingInput;
+            document.getElementById('typing-input').onpaste = (e) => e.preventDefault();
+        }
+
+        function startTypingTest() {
+            typingTest.isActive = true;
+            typingTest.startTime = Date.now();
+            typingTest.timeLeft = typingTest.timeLimit;
+            
+            document.getElementById('typing-input').disabled = false;
+            document.getElementById('typing-input').focus();
+            document.getElementById('start-typing').disabled = true;
+            
+            updateTypingDisplay();
+            
+            typingTest.timer = setInterval(() => {
+                typingTest.timeLeft--;
+                updateTypingStats();
+                
+                if (typingTest.timeLeft <= 0) {
+                    endTypingTest();
+                }
+            }, 1000);
+        }
+
+        function handleTypingInput() {
+            if (!typingTest.isActive) return;
+            
+            const input = document.getElementById('typing-input').value;
+            const currentChar = input[input.length - 1];
+            const expectedChar = typingTest.text[typingTest.currentIndex];
+            
+            if (currentChar === expectedChar) {
+                typingTest.correctChars++;
+                typingTest.currentIndex++;
+            } else {
+                typingTest.errors++;
+            }
+            
+            typingTest.totalChars++;
+            updateTypingDisplay();
+            updateTypingStats();
+            
+            if (typingTest.currentIndex >= typingTest.text.length) {
+                endTypingTest();
+            }
+        }
+
+        function updateTypingDisplay() {
+            const textDisplay = document.getElementById('text-display');
+            const input = document.getElementById('typing-input').value;
+            
+            let html = '';
+            
+            for (let i = 0; i < typingTest.text.length; i++) {
+                const char = typingTest.text[i];
+                
+                if (i < typingTest.currentIndex) {
+                    html += `<span class="correct">${char}</span>`;
+                } else if (i === typingTest.currentIndex) {
+                    html += `<span class="current">${char}</span>`;
+                } else {
+                    html += char;
+                }
+            }
+            
+            textDisplay.innerHTML = html;
+        }
+
+        function updateTypingStats() {
+            const timeElapsed = typingTest.timeLimit - typingTest.timeLeft;
+            const minutes = timeElapsed / 60;
+            
+            const wpm = minutes > 0 ? Math.round((typingTest.correctChars / 5) / minutes) : 0;
+            const accuracy = typingTest.totalChars > 0 ? Math.round(((typingTest.totalChars - typingTest.errors) / typingTest.totalChars) * 100) : 100;
+            
+            document.getElementById('wpm').textContent = wpm;
+            document.getElementById('accuracy').textContent = accuracy + '%';
+            document.getElementById('time').textContent = typingTest.timeLeft + 's';
+            document.getElementById('characters').textContent = typingTest.currentIndex;
+        }
+
+        function endTypingTest() {
+            typingTest.isActive = false;
+            clearInterval(typingTest.timer);
+            
+            document.getElementById('typing-input').disabled = true;
+            document.getElementById('start-typing').disabled = false;
+            document.getElementById('start-typing').textContent = 'Start New Test';
+            
+            const finalWPM = document.getElementById('wpm').textContent;
+            const finalAccuracy = document.getElementById('accuracy').textContent;
+            
+            alert(`Test Complete!\nWPM: ${finalWPM}\nAccuracy: ${finalAccuracy}`);
+        }
+
+        function resetTypingTest() {
+            typingTest = {
+                text: "The quick brown fox jumps over the lazy dog. This pangram contains every letter of the alphabet at least once. Typing tests are great for improving your keyboard skills and measuring your words per minute. Practice makes perfect, so keep typing to increase your speed and accuracy. Remember to use proper finger placement and maintain good posture while typing.",
+                currentIndex: 0,
+                startTime: null,
+                timeLimit: 60,
+                timeLeft: 60,
+                timer: null,
+                correctChars: 0,
+                totalChars: 0,
+                isActive: false,
+                errors: 0
+            };
+            
+            if (typingTest.timer) clearInterval(typingTest.timer);
+            
+            document.getElementById('typing-input').value = '';
+            document.getElementById('typing-input').disabled = true;
+            document.getElementById('start-typing').disabled = false;
+            document.getElementById('start-typing').textContent = 'Start Test';
+            
+            updateTypingDisplay();
+            updateTypingStats();
+        }
+
+        // Initialize
+        showMenu();
+    </script>
+</body>
+</html>
