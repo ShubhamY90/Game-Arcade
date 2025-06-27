@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Arcade</title>
+    <title>Mini Game Arcade</title>
     <link rel="icon" href="faviconImage.png">
     <style>
         * {
@@ -13,34 +13,17 @@
         }
 
         body {
-            font-family: 'Courier New', monospace;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 25%, #16213e 50%, #0f3460 100%);
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            color: #00ffff;
+            color: white;
             overflow-x: hidden;
-            position: relative;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, rgba(0, 255, 0, 0.1) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: -1;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            position: relative;
         }
 
         .header {
@@ -52,22 +35,16 @@
         .header h1 {
             font-size: 3.5rem;
             margin-bottom: 10px;
-            text-shadow: 
-                0 0 10px #00ffff,
-                0 0 20px #00ffff,
-                0 0 40px #00ffff,
-                0 0 80px #00ffff;
-            background: linear-gradient(45deg, #00ffff, #ff00ff, #00ff00, #ffff00);
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: neonPulse 2s ease-in-out infinite alternate;
         }
 
         .header p {
             font-size: 1.2rem;
-            color: #00ff88;
-            text-shadow: 0 0 10px #00ff88;
+            opacity: 0.9;
         }
 
         .game-menu {
@@ -78,110 +55,75 @@
         }
 
         .game-card {
-            background: linear-gradient(145deg, rgba(0, 255, 255, 0.05), rgba(255, 0, 255, 0.05));
-            backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 30px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            border: 2px solid rgba(0, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
             animation: fadeInUp 1s ease-out;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .game-card::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #00ffff, #ff00ff, #00ff00, #ffff00);
-            border-radius: 20px;
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 0.3s ease;
         }
 
         .game-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            background: linear-gradient(145deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
-            box-shadow: 
-                0 20px 40px rgba(0, 255, 255, 0.2),
-                0 0 60px rgba(0, 255, 255, 0.1);
-            border-color: #00ffff;
-        }
-
-        .game-card:hover::before {
-            opacity: 1;
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
 
         .game-card h3 {
             font-size: 1.8rem;
             margin-bottom: 15px;
-            color: #00ffff;
-            text-shadow: 0 0 10px #00ffff;
+            color: #fff;
         }
 
         .game-card p {
-            color: #88ffaa;
+            opacity: 0.8;
             margin-bottom: 20px;
             line-height: 1.6;
         }
 
         .play-btn {
-            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
             border: none;
             padding: 12px 25px;
             border-radius: 25px;
-            color: #000;
+            color: white;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
         }
 
         .play-btn:hover {
             transform: scale(1.05);
-            box-shadow: 
-                0 5px 15px rgba(0, 255, 255, 0.4),
-                0 0 30px rgba(255, 0, 255, 0.3);
-            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
         .game-screen {
             display: none;
-            background: linear-gradient(145deg, rgba(0, 0, 0, 0.8), rgba(26, 26, 46, 0.8));
-            backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 40px;
             margin-top: 20px;
             animation: fadeIn 0.5s ease-out;
-            border: 1px solid rgba(0, 255, 255, 0.2);
         }
 
         .back-btn {
-            background: linear-gradient(145deg, rgba(255, 0, 255, 0.2), rgba(0, 0, 0, 0.5));
-            border: 1px solid #ff00ff;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
             padding: 10px 20px;
             border-radius: 15px;
-            color: #ff00ff;
+            color: white;
             cursor: pointer;
             margin-bottom: 20px;
             transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         .back-btn:hover {
-            background: linear-gradient(145deg, rgba(255, 0, 255, 0.4), rgba(0, 0, 0, 0.7));
-            box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
-            transform: translateX(-5px);
+            background: rgba(255, 255, 255, 0.3);
         }
 
         /* Simon Game Styles */
@@ -192,7 +134,7 @@
         .simon-board {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            gap: 10px;
             max-width: 300px;
             margin: 20px auto;
         }
@@ -200,37 +142,22 @@
         .simon-button {
             width: 120px;
             height: 120px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            border: none;
             border-radius: 20px;
             cursor: pointer;
             transition: all 0.2s ease;
             font-size: 1.2rem;
             font-weight: bold;
-            position: relative;
-            overflow: hidden;
         }
 
-        .simon-button.red { 
-            background: linear-gradient(145deg, #ff0040, #cc0033);
-            box-shadow: 0 0 20px rgba(255, 0, 64, 0.3);
-        }
-        .simon-button.blue { 
-            background: linear-gradient(145deg, #0080ff, #0066cc);
-            box-shadow: 0 0 20px rgba(0, 128, 255, 0.3);
-        }
-        .simon-button.green { 
-            background: linear-gradient(145deg, #00ff80, #00cc66);
-            box-shadow: 0 0 20px rgba(0, 255, 128, 0.3);
-        }
-        .simon-button.yellow { 
-            background: linear-gradient(145deg, #ffff00, #cccc00);
-            box-shadow: 0 0 20px rgba(255, 255, 0, 0.3);
-        }
+        .simon-button.red { background: #ff4757; }
+        .simon-button.blue { background: #3742fa; }
+        .simon-button.green { background: #2ed573; }
+        .simon-button.yellow { background: #ffa502; }
 
         .simon-button.active {
             transform: scale(0.95);
-            filter: brightness(2);
-            box-shadow: 0 0 40px currentColor;
+            filter: brightness(1.5);
         }
 
         .simon-info {
@@ -240,34 +167,27 @@
         .simon-info h3 {
             font-size: 1.5rem;
             margin-bottom: 10px;
-            color: #00ffff;
-            text-shadow: 0 0 10px #00ffff;
         }
 
         .game-btn {
-            background: linear-gradient(45deg, #0080ff, #00ffff);
+            background: linear-gradient(45deg, #667eea, #764ba2);
             border: none;
             padding: 12px 25px;
             border-radius: 25px;
-            color: #000;
+            color: white;
             font-weight: bold;
             cursor: pointer;
             margin: 10px;
             transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 0 15px rgba(0, 128, 255, 0.3);
         }
 
         .game-btn:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 25px rgba(0, 255, 255, 0.5);
         }
 
         .game-btn:disabled {
-            opacity: 0.3;
+            opacity: 0.5;
             cursor: not-allowed;
-            box-shadow: none;
         }
 
         /* Dice Game Styles */
@@ -283,24 +203,21 @@
         }
 
         .player {
-            background: linear-gradient(145deg, rgba(0, 255, 255, 0.05), rgba(0, 0, 0, 0.3));
+            background: rgba(255, 255, 255, 0.1);
             padding: 30px;
             border-radius: 15px;
-            border: 1px solid rgba(0, 255, 255, 0.2);
         }
 
         .player h3 {
             font-size: 1.5rem;
             margin-bottom: 20px;
-            color: #00ffff;
-            text-shadow: 0 0 10px #00ffff;
         }
 
         .dice {
             width: 80px;
             height: 80px;
-            background: linear-gradient(145deg, #ffffff, #e0e0e0);
-            color: #000;
+            background: white;
+            color: #333;
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -308,21 +225,17 @@
             font-size: 2rem;
             font-weight: bold;
             margin: 20px auto;
-            box-shadow: 
-                0 5px 15px rgba(0, 0, 0, 0.3),
-                0 0 20px rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             transition: all 0.3s ease;
         }
 
         .dice.rolling {
             animation: roll 0.5s ease-in-out;
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
         }
 
         .winner {
-            background: linear-gradient(45deg, #ff00ff, #00ffff) !important;
-            color: #000 !important;
-            box-shadow: 0 0 40px rgba(0, 255, 255, 0.8) !important;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4) !important;
+            color: white !important;
         }
 
         /* Typing Test Styles */
@@ -338,77 +251,60 @@
         }
 
         .stat {
-            background: linear-gradient(145deg, rgba(0, 255, 255, 0.1), rgba(0, 0, 0, 0.3));
+            background: rgba(255, 255, 255, 0.1);
             padding: 15px;
             border-radius: 10px;
-            border: 1px solid rgba(0, 255, 255, 0.2);
         }
 
         .stat h4 {
             font-size: 0.9rem;
-            color: #88ffaa;
+            opacity: 0.8;
             margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         .stat .value {
             font-size: 1.5rem;
             font-weight: bold;
-            color: #00ffff;
-            text-shadow: 0 0 10px #00ffff;
         }
 
         .text-display {
-            background: linear-gradient(145deg, rgba(0, 0, 0, 0.5), rgba(26, 26, 46, 0.3));
+            background: rgba(255, 255, 255, 0.1);
             padding: 30px;
             border-radius: 15px;
             margin: 20px 0;
             font-size: 1.2rem;
             line-height: 1.8;
             text-align: left;
-            border: 1px solid rgba(0, 255, 255, 0.2);
-            color: #ffffff;
         }
 
         .text-display .correct {
-            background: rgba(0, 255, 128, 0.3);
-            color: #00ff80;
-            text-shadow: 0 0 5px #00ff80;
+            background: rgba(46, 213, 115, 0.3);
+            color: #2ed573;
         }
 
         .text-display .incorrect {
-            background: rgba(255, 0, 64, 0.3);
-            color: #ff0040;
-            text-shadow: 0 0 5px #ff0040;
+            background: rgba(255, 71, 87, 0.3);
+            color: #ff4757;
         }
 
         .text-display .current {
-            background: rgba(0, 255, 255, 0.3);
-            color: #00ffff;
-            animation: neonBlink 1s infinite;
+            background: rgba(255, 255, 255, 0.3);
+            animation: blink 1s infinite;
         }
 
         .typing-input {
             width: 100%;
             padding: 15px;
-            border: 2px solid rgba(0, 255, 255, 0.3);
+            border: none;
             border-radius: 10px;
             font-size: 1.1rem;
-            background: linear-gradient(145deg, rgba(0, 0, 0, 0.8), rgba(26, 26, 46, 0.5));
+            background: rgba(255, 255, 255, 0.9);
             margin-top: 20px;
-            color: #00ffff;
-            font-family: 'Courier New', monospace;
         }
 
         .typing-input:focus {
             outline: none;
-            border-color: #00ffff;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-        }
-
-        .typing-input::placeholder {
-            color: #666;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
         }
 
         /* Animations */
@@ -433,32 +329,9 @@
             100% { transform: rotate(360deg); }
         }
 
-        @keyframes neonBlink {
-            0%, 50% { 
-                opacity: 1; 
-                text-shadow: 0 0 10px #00ffff;
-            }
-            51%, 100% { 
-                opacity: 0.3; 
-                text-shadow: none;
-            }
-        }
-
-        @keyframes neonPulse {
-            0% { 
-                text-shadow: 
-                    0 0 10px #00ffff,
-                    0 0 20px #00ffff,
-                    0 0 40px #00ffff,
-                    0 0 80px #00ffff;
-            }
-            100% { 
-                text-shadow: 
-                    0 0 5px #00ffff,
-                    0 0 10px #00ffff,
-                    0 0 20px #00ffff,
-                    0 0 40px #00ffff;
-            }
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
         }
 
         /* Responsive Design */
@@ -469,58 +342,43 @@
             .players { grid-template-columns: 1fr; gap: 20px; }
             .typing-stats { grid-template-columns: repeat(2, 1fr); }
         }
-
-        /* Additional futuristic elements */
-        h2 {
-            color: #00ffff;
-            text-shadow: 0 0 15px #00ffff;
-            text-align: center;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        #simon-status, #dice-result {
-            color: #88ffaa;
-            text-shadow: 0 0 5px #88ffaa;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🚀 CYBER ARCADE</h1>
-            <p>Enter the digital realm and challenge your neural pathways!</p>
+            <h1>🎮 Mini Game Arcade</h1>
+            <p>Challenge yourself with these fun mini-games!</p>
         </div>
 
         <div id="main-menu" class="game-menu">
             <div class="game-card" onclick="showGame('simon')">
-                <h3>🔴 Neural Sequence</h3>
-                <p>Test your memory matrix with quantum color patterns. Process the sequence and replicate the data stream!</p>
-                <button class="play-btn">Initialize</button>
+                <h3>🔴 Simon Game</h3>
+                <p>Test your memory with this classic color sequence game. Watch the pattern and repeat it back!</p>
+                <button class="play-btn">Play Now</button>
             </div>
 
             <div class="game-card" onclick="showGame('dice')">
-                <h3>🎲 Probability Engine</h3>
-                <p>Engage random number generators in a digital duel. Let the algorithms decide your fate!</p>
-                <button class="play-btn">Execute</button>
+                <h3>🎲 Dice Game</h3>
+                <p>Roll the dice and see who gets the highest number. Simple luck-based multiplayer fun!</p>
+                <button class="play-btn">Play Now</button>
             </div>
 
             <div class="game-card" onclick="showGame('typing')">
-                <h3>⌨️ Data Stream Processor</h3>
-                <p>Measure your neural-digital interface speed. How fast can you process information streams?</p>
-                <button class="play-btn">Connect</button>
+                <h3>⌨️ Typing Speed Test</h3>
+                <p>Test your typing speed and accuracy. See how many words per minute you can type!</p>
+                <button class="play-btn">Play Now</button>
             </div>
         </div>
 
         <!-- Simon Game -->
         <div id="simon-game" class="game-screen">
-            <button class="back-btn" onclick="showMenu()">← Disconnect</button>
+            <button class="back-btn" onclick="showMenu()">← Back to Menu</button>
             <div class="simon-container">
-                <h2>Neural Sequence Matrix</h2>
+                <h2>Simon Game</h2>
                 <div class="simon-info">
                     <h3>Level: <span id="simon-level">1</span></h3>
-                    <p id="simon-status">Initialize sequence protocol!</p>
+                    <p id="simon-status">Click Start to begin!</p>
                 </div>
                 <div class="simon-board">
                     <button class="simon-button red" data-color="red"></button>
@@ -528,39 +386,39 @@
                     <button class="simon-button green" data-color="green"></button>
                     <button class="simon-button yellow" data-color="yellow"></button>
                 </div>
-                <button id="simon-start" class="game-btn">Start Protocol</button>
-                <button id="simon-reset" class="game-btn">Reset Matrix</button>
+                <button id="simon-start" class="game-btn">Start Game</button>
+                <button id="simon-reset" class="game-btn">Reset</button>
             </div>
         </div>
 
         <!-- Dice Game -->
         <div id="dice-game" class="game-screen">
-            <button class="back-btn" onclick="showMenu()">← Disconnect</button>
+            <button class="back-btn" onclick="showMenu()">← Back to Menu</button>
             <div class="dice-container">
-                <h2>Probability Engine</h2>
+                <h2>Dice Game</h2>
                 <div class="players">
                     <div class="player">
-                        <h3>User Alpha</h3>
+                        <h3>Player 1</h3>
                         <div id="dice1" class="dice">?</div>
                         <p id="score1">Score: 0</p>
                     </div>
                     <div class="player">
-                        <h3>User Beta</h3>
+                        <h3>Player 2</h3>
                         <div id="dice2" class="dice">?</div>
                         <p id="score2">Score: 0</p>
                     </div>
                 </div>
-                <button id="roll-dice" class="game-btn">Execute Roll</button>
-                <button id="reset-dice" class="game-btn">Reset System</button>
+                <button id="roll-dice" class="game-btn">Roll Dice</button>
+                <button id="reset-dice" class="game-btn">Reset Game</button>
                 <p id="dice-result" style="font-size: 1.5rem; margin-top: 20px;"></p>
             </div>
         </div>
 
         <!-- Typing Test -->
         <div id="typing-game" class="game-screen">
-            <button class="back-btn" onclick="showMenu()">← Disconnect</button>
+            <button class="back-btn" onclick="showMenu()">← Back to Menu</button>
             <div class="typing-container">
-                <h2>Data Stream Processor</h2>
+                <h2>Typing Speed Test</h2>
                 <div class="typing-stats">
                     <div class="stat">
                         <h4>WPM</h4>
@@ -580,10 +438,10 @@
                     </div>
                 </div>
                 <div id="text-display" class="text-display"></div>
-                <input type="text" id="typing-input" class="typing-input" placeholder="Connect neural interface and begin data processing..." disabled>
+                <input type="text" id="typing-input" class="typing-input" placeholder="Click Start and begin typing here..." disabled>
                 <div style="margin-top: 20px;">
-                    <button id="start-typing" class="game-btn">Start Protocol</button>
-                    <button id="reset-typing" class="game-btn">Reset System</button>
+                    <button id="start-typing" class="game-btn">Start Test</button>
+                    <button id="reset-typing" class="game-btn">Reset</button>
                 </div>
             </div>
         </div>
@@ -660,7 +518,7 @@
 
         function showSimonSequence() {
             simonGame.isShowingSequence = true;
-            document.getElementById('simon-status').textContent = 'Processing sequence data...';
+            document.getElementById('simon-status').textContent = 'Watch the sequence...';
             
             let i = 0;
             const interval = setInterval(() => {
@@ -670,7 +528,7 @@
                 } else {
                     clearInterval(interval);
                     simonGame.isShowingSequence = false;
-                    document.getElementById('simon-status').textContent = 'Neural input required! Replicate sequence.';
+                    document.getElementById('simon-status').textContent = 'Your turn! Click the sequence.';
                 }
             }, 800);
         }
@@ -691,7 +549,7 @@
             
             if (simonGame.playerSequence[currentIndex] !== simonGame.sequence[currentIndex]) {
                 // Wrong input
-                document.getElementById('simon-status').textContent = 'ERROR! Neural pathway corrupted. Restart protocol.';
+                document.getElementById('simon-status').textContent = 'Wrong! Game Over. Click Start to try again.';
                 simonGame.isPlaying = false;
                 document.getElementById('simon-start').disabled = false;
                 return;
@@ -704,7 +562,7 @@
                     if (simonGame.level <= 20) {
                         nextSimonRound();
                     } else {
-                        document.getElementById('simon-status').textContent = 'SYSTEM MASTERED! Neural interface optimized!';
+                        document.getElementById('simon-status').textContent = 'Congratulations! You won!';
                         simonGame.isPlaying = false;
                         document.getElementById('simon-start').disabled = false;
                     }
@@ -725,7 +583,7 @@
         function updateSimonDisplay() {
             document.getElementById('simon-level').textContent = simonGame.level;
             if (!simonGame.isPlaying) {
-                document.getElementById('simon-status').textContent = 'Initialize sequence protocol!';
+                document.getElementById('simon-status').textContent = 'Click Start to begin!';
             }
         }
 
@@ -790,13 +648,13 @@
             if (roll1 > roll2) {
                 diceGame.player1Score++;
                 dice1.classList.add('winner');
-                result = 'User Alpha Dominates!';
+                result = 'Player 1 Wins This Round!';
             } else if (roll2 > roll1) {
                 diceGame.player2Score++;
                 dice2.classList.add('winner');
-                result = 'User Beta Prevails!';
+                result = 'Player 2 Wins This Round!';
             } else {
-                result = "System Equilibrium!";
+                result = "It's a Tie!";
             }
             
             document.getElementById('dice-result').textContent = result;
@@ -808,4 +666,162 @@
 
         function resetDice() {
             diceGame = { player1Score: 0, player2Score: 0, isRolling: false };
-            document.
+            document.getElementById('dice1').textContent = '?';
+            document.getElementById('dice2').textContent = '?';
+            document.getElementById('dice1').classList.remove('winner');
+            document.getElementById('dice2').classList.remove('winner');
+            document.getElementById('dice-result').textContent = '';
+            document.getElementById('roll-dice').disabled = false;
+            updateDiceDisplay();
+        }
+
+        function updateDiceDisplay() {
+            document.getElementById('score1').textContent = `Score: ${diceGame.player1Score}`;
+            document.getElementById('score2').textContent = `Score: ${diceGame.player2Score}`;
+        }
+
+        // Typing Test Logic
+        let typingTest = {
+            text: "The quick brown fox jumps over the lazy dog. This pangram contains every letter of the alphabet at least once. Typing tests are great for improving your keyboard skills and measuring your words per minute. Practice makes perfect, so keep typing to increase your speed and accuracy. Remember to use proper finger placement and maintain good posture while typing.",
+            currentIndex: 0,
+            startTime: null,
+            timeLimit: 60,
+            timeLeft: 60,
+            timer: null,
+            correctChars: 0,
+            totalChars: 0,
+            isActive: false,
+            errors: 0
+        };
+
+        function initTyping() {
+            resetTypingTest();
+            
+            document.getElementById('start-typing').onclick = startTypingTest;
+            document.getElementById('reset-typing').onclick = resetTypingTest;
+            document.getElementById('typing-input').oninput = handleTypingInput;
+            document.getElementById('typing-input').onpaste = (e) => e.preventDefault();
+        }
+
+        function startTypingTest() {
+            typingTest.isActive = true;
+            typingTest.startTime = Date.now();
+            typingTest.timeLeft = typingTest.timeLimit;
+            
+            document.getElementById('typing-input').disabled = false;
+            document.getElementById('typing-input').focus();
+            document.getElementById('start-typing').disabled = true;
+            
+            updateTypingDisplay();
+            
+            typingTest.timer = setInterval(() => {
+                typingTest.timeLeft--;
+                updateTypingStats();
+                
+                if (typingTest.timeLeft <= 0) {
+                    endTypingTest();
+                }
+            }, 1000);
+        }
+
+        function handleTypingInput() {
+            if (!typingTest.isActive) return;
+            
+            const input = document.getElementById('typing-input').value;
+            const currentChar = input[input.length - 1];
+            const expectedChar = typingTest.text[typingTest.currentIndex];
+            
+            if (currentChar === expectedChar) {
+                typingTest.correctChars++;
+                typingTest.currentIndex++;
+            } else {
+                typingTest.errors++;
+            }
+            
+            typingTest.totalChars++;
+            updateTypingDisplay();
+            updateTypingStats();
+            
+            if (typingTest.currentIndex >= typingTest.text.length) {
+                endTypingTest();
+            }
+        }
+
+        function updateTypingDisplay() {
+            const textDisplay = document.getElementById('text-display');
+            const input = document.getElementById('typing-input').value;
+            
+            let html = '';
+            
+            for (let i = 0; i < typingTest.text.length; i++) {
+                const char = typingTest.text[i];
+                
+                if (i < typingTest.currentIndex) {
+                    html += `<span class="correct">${char}</span>`;
+                } else if (i === typingTest.currentIndex) {
+                    html += `<span class="current">${char}</span>`;
+                } else {
+                    html += char;
+                }
+            }
+            
+            textDisplay.innerHTML = html;
+        }
+
+        function updateTypingStats() {
+            const timeElapsed = typingTest.timeLimit - typingTest.timeLeft;
+            const minutes = timeElapsed / 60;
+            
+            const wpm = minutes > 0 ? Math.round((typingTest.correctChars / 5) / minutes) : 0;
+            const accuracy = typingTest.totalChars > 0 ? Math.round(((typingTest.totalChars - typingTest.errors) / typingTest.totalChars) * 100) : 100;
+            
+            document.getElementById('wpm').textContent = wpm;
+            document.getElementById('accuracy').textContent = accuracy + '%';
+            document.getElementById('time').textContent = typingTest.timeLeft + 's';
+            document.getElementById('characters').textContent = typingTest.currentIndex;
+        }
+
+        function endTypingTest() {
+            typingTest.isActive = false;
+            clearInterval(typingTest.timer);
+            
+            document.getElementById('typing-input').disabled = true;
+            document.getElementById('start-typing').disabled = false;
+            document.getElementById('start-typing').textContent = 'Start New Test';
+            
+            const finalWPM = document.getElementById('wpm').textContent;
+            const finalAccuracy = document.getElementById('accuracy').textContent;
+            
+            alert(`Test Complete!\nWPM: ${finalWPM}\nAccuracy: ${finalAccuracy}`);
+        }
+
+        function resetTypingTest() {
+            typingTest = {
+                text: "The quick brown fox jumps over the lazy dog. This pangram contains every letter of the alphabet at least once. Typing tests are great for improving your keyboard skills and measuring your words per minute. Practice makes perfect, so keep typing to increase your speed and accuracy. Remember to use proper finger placement and maintain good posture while typing.",
+                currentIndex: 0,
+                startTime: null,
+                timeLimit: 60,
+                timeLeft: 60,
+                timer: null,
+                correctChars: 0,
+                totalChars: 0,
+                isActive: false,
+                errors: 0
+            };
+            
+            if (typingTest.timer) clearInterval(typingTest.timer);
+            
+            document.getElementById('typing-input').value = '';
+            document.getElementById('typing-input').disabled = true;
+            document.getElementById('start-typing').disabled = false;
+            document.getElementById('start-typing').textContent = 'Start Test';
+            
+            updateTypingDisplay();
+            updateTypingStats();
+        }
+
+        // Initialize
+        showMenu();
+    </script>
+</body>
+</html>
